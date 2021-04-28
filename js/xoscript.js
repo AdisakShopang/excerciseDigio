@@ -75,15 +75,15 @@ function clickedBox(element){
     
     if(players.classList.contains("player")){
         // collect history
-        historyPlay.push("Player O /// " + element.getAttribute("coor"));
+        historyPlay.push("Player O -> " + element.getAttribute("coor"));
 
         playerSign = "O"; //if player choose (O) then change playerSign to O
         element.innerHTML = `<i class="${playerOIcon}"></i>`; //adding circle icon tag inside user clicked element/box
-        players.classList.add("active"); ///add active class in players
+        players.classList.add("active"); //add active class in players
         element.setAttribute("id", playerSign); //set id attribute in span/box with player choosen sign
     }else{
         // collect history
-        historyPlay.push("Player X /// " + element.getAttribute("coor"));
+        historyPlay.push("Player X -> " + element.getAttribute("coor"));
 
         element.innerHTML = `<i class="${playerXIcon}"></i>`; //adding cross icon tag inside user clicked element/box
         players.classList.add("active"); //add active class in players
@@ -113,7 +113,7 @@ function bot(){
         if(array.length > 0){ //if array length is greater than 0
             if(players.classList.contains("player")){ 
                 // collect history
-                historyPlay.push("Bot X /// " + allBox[randomBox].getAttribute("coor"));
+                historyPlay.push("Bot X -> " + allBox[randomBox].getAttribute("coor"));
 
                 playerSign = "X"; //if player has chosen O then bot will X
                 allBox[randomBox].innerHTML = `<i class="${playerXIcon}"></i>`; //adding cross icon tag inside bot selected element
@@ -121,7 +121,7 @@ function bot(){
                 allBox[randomBox].setAttribute("id", playerSign); //set id attribute in span/box with player choosen sign
             }else{
                 // collect history
-                historyPlay.push("Bot O /// " + allBox[randomBox].getAttribute("coor"));
+                historyPlay.push("Bot O -> " + allBox[randomBox].getAttribute("coor"));
 
                 allBox[randomBox].innerHTML = `<i class="${playerOIcon}"></i>`; //adding circle icon tag inside bot selected element
                 players.classList.remove("active"); //remove active class in players
@@ -153,6 +153,8 @@ function selectWinner(){ //if the one of following winning combination match the
             playBoard.classList.remove("show");
         }, 700); //1s = 1000ms
         wonText.innerHTML = `Player <p>${playerSign}</p> won the game!`; //displaying winning text with passing playerSign (X or O)
+        printHistoryBoard();
+        
     }else{ //if all boxes/element have id value and still no one win then draw the match
         if(getIdVal(1) != "" && getIdVal(2) != "" && getIdVal(3) != "" && getIdVal(4) != "" && getIdVal(5) != "" && getIdVal(6) != "" && getIdVal(7) != "" && getIdVal(8) != "" && getIdVal(9) != ""){
             runBot = false; //passing the false boolen value to runBot so bot won't run again
@@ -162,6 +164,7 @@ function selectWinner(){ //if the one of following winning combination match the
                 playBoard.classList.remove("show");
             }, 700); //1s = 1000ms
             wonText.textContent = "Match has been drawn!"; //displaying draw match text
+            printHistoryBoard();
         }
     }
 }
@@ -169,4 +172,19 @@ function selectWinner(){ //if the one of following winning combination match the
 replayBtn.onclick = ()=>{
     historyPlay = [];
     window.location.reload(); //reload the current page on replay button click
+}
+
+function printHistoryBoard(){
+    let historyBoard = document.querySelector(".history-board");
+    console.log(historyBoard);
+    let formattedData = "<b>History Played</b>" + "<br>";
+
+    historyPlay.forEach((data,index) => {
+        console.log(index);
+        formattedData += data + "<br>";
+    });
+    console.log(formattedData);
+    
+    historyBoard.innerHTML = formattedData;
+
 }
