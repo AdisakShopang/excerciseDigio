@@ -2,8 +2,8 @@
 
 //selecting all required elements
 const selectBox = document.querySelector(".select-box"),
-selectBtnX = selectBox.querySelector(".options .playerX"),
-selectBtnO = selectBox.querySelector(".options .playerO"),
+selectBtnX = selectBox.querySelector(".playerX"),
+selectBtnO = selectBox.querySelector(".playerO"),
 playBoard = document.querySelector(".play-board"),
 players = document.querySelector(".players"),
 allBox = document.querySelectorAll("section span"),

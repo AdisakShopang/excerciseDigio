@@ -3,15 +3,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- <title>Tic Tac Toe Game | CodingNepal</title> -->
-    <link rel="stylesheet" href="css/xo.css">
-    <script src="js/xo.js"></script>
+    <title>Tic Tac Toe Game | CodingNepal</title>
+    <link rel="stylesheet" href="css/xostyle.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 </head>
 <body>
   <!-- select box -->
   <div class="select-box">
     <header>Tic Tac Toe</header>
     <div class="content">
+      <div class="title" style="text-align: center;">Fill board size.
+        <input type="text" id="boardSize" name="boardSize" value="3" style="text-align: center; font-size: 22px;">
+      </div>
       <div class="title">Select which you want to be?</div>
       <div class="options">
         <button class="playerX">Player (X)</button>
@@ -31,7 +34,7 @@
       </div>
     </div>
     <div class="play-area">
-      <section>
+      <!-- <section>
         <span class="box1"></span>
         <span class="box2"></span>
         <span class="box3"></span>
@@ -45,7 +48,7 @@
         <span class="box7"></span>
         <span class="box8"></span>
         <span class="box9"></span>
-      </section>
+      </section> -->
     </div>
   </div>
 
@@ -55,7 +58,7 @@
     <div class="btn"><button>Replay</button></div>
   </div>
 
-  <!-- <script src="script.js"></script> -->
+  <script src="js/xoscript.js"></script>
 
 </body>
 </html>
