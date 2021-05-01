@@ -96,9 +96,11 @@ selectBtnX.onclick = ()=>{
     boardSize = document.querySelector("#boardSize").value;
     console.log(boardSize);
     
-    if(isNaN(boardSize) || boardSize < 3){
+    if(isNaN(boardSize) || boardSize < 3 || boardSize > 9){
         if(boardSize < 3){
             alert('Please fill board size more than 3.');
+        }if(boardSize > 9){
+            alert('Please fill board size less than 9.');
         }else{
             alert('Please fill only number.');
         }
@@ -113,9 +115,11 @@ selectBtnO.onclick = ()=>{
     boardSize = document.querySelector("#boardSize").value;
     console.log(boardSize);
 
-    if(isNaN(boardSize) || boardSize < 3){
+    if(isNaN(boardSize) || boardSize < 3 || boardSize > 9){
         if(boardSize < 3){
             alert('Please fill board size more than 3.');
+        }if(boardSize > 9){
+            alert('Please fill board size less than 9.');
         }else{
             alert('Please fill only number.');
         }
