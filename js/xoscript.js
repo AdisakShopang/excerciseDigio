@@ -17,6 +17,7 @@ var historyPlay = [];
 var loadedData;
 var winCondition = [];
 var boardSize = 0;
+var isOver = false;
 
 window.onload = ()=>{ //once window loaded
 
@@ -94,8 +95,13 @@ function renderPlayBoard(){
 selectBtnX.onclick = ()=>{
     boardSize = document.querySelector("#boardSize").value;
     console.log(boardSize);
-    if(boardSize < 3){
-        alert('Please fill board size more than 3')
+    
+    if(isNaN(boardSize) || boardSize < 3){
+        if(boardSize < 3){
+            alert('Please fill board size more than 3.');
+        }else{
+            alert('Please fill only number.');
+        }
     }else{
         renderPlayBoard();
         selectBox.classList.add("hide"); //hide select box
@@ -106,8 +112,13 @@ selectBtnX.onclick = ()=>{
 selectBtnO.onclick = ()=>{ 
     boardSize = document.querySelector("#boardSize").value;
     console.log(boardSize);
-    if(boardSize < 3){
-        alert('Please fill board size more than 3')
+
+    if(isNaN(boardSize) || boardSize < 3){
+        if(boardSize < 3){
+            alert('Please fill board size more than 3.');
+        }else{
+            alert('Please fill only number.');
+        }
     }else{
         renderPlayBoard();
         selectBox.classList.add("hide"); //hide select box
@@ -126,32 +137,34 @@ let botMove = [];
 
 // user click function
 function clickedBox(element){
-    if(players.classList.contains("player")){
-        // collect history
-        historyPlay.push("Player O -> " + element.getAttribute("coor"));
-        playerMove.push(element.getAttribute("coor"));
-
-        playerSign = "O"; //if player choose (O) then change playerSign to O
-        element.innerHTML = `<i class="${playerOIcon}"></i>`; //adding circle icon tag inside user clicked element/box
-        players.classList.add("active"); //add active class in players
-        element.setAttribute("id", playerSign); //set id attribute in span/box with player choosen sign
-    }else{
-        // collect history
-        historyPlay.push("Player X -> " + element.getAttribute("coor"));
-        playerMove.push(element.getAttribute("coor"));
-
-        element.innerHTML = `<i class="${playerXIcon}"></i>`; //adding cross icon tag inside user clicked element/box
-        players.classList.add("active"); //add active class in players
-        element.setAttribute("id", playerSign); //set id attribute in span/box with player choosen sign
+    if(isOver == false){
+        if(players.classList.contains("player")){
+            // collect history
+            historyPlay.push("Player O -> " + element.getAttribute("coor"));
+            playerMove.push(element.getAttribute("coor"));
+    
+            playerSign = "O"; //if player choose (O) then change playerSign to O
+            element.innerHTML = `<i class="${playerOIcon}"></i>`; //adding circle icon tag inside user clicked element/box
+            players.classList.add("active"); //add active class in players
+            element.setAttribute("id", playerSign); //set id attribute in span/box with player choosen sign
+        }else{
+            // collect history
+            historyPlay.push("Player X -> " + element.getAttribute("coor"));
+            playerMove.push(element.getAttribute("coor"));
+    
+            element.innerHTML = `<i class="${playerXIcon}"></i>`; //adding cross icon tag inside user clicked element/box
+            players.classList.add("active"); //add active class in players
+            element.setAttribute("id", playerSign); //set id attribute in span/box with player choosen sign
+        }
+        // console.log(historyPlay);
+        selectWinner('Player',playerSign); //caliing selectWinner function
+        element.style.pointerEvents = "none"; //once user select any box then that box can'be clicked again
+        playBoard.style.pointerEvents = "none"; //add pointerEvents none to playboard so user can't immediately click on any other box until bot select
+        let randomTimeDelay = ((Math.random() * 1000) + 200).toFixed(); //generating random number so bot will randomly delay to select unselected box
+        setTimeout(()=>{
+            bot(runBot); //calling bot function
+        }, 500); //passing random delay value
     }
-    // console.log(historyPlay);
-    selectWinner('Player',playerSign); //caliing selectWinner function
-    element.style.pointerEvents = "none"; //once user select any box then that box can'be clicked again
-    playBoard.style.pointerEvents = "none"; //add pointerEvents none to playboard so user can't immediately click on any other box until bot select
-    let randomTimeDelay = ((Math.random() * 1000) + 200).toFixed(); //generating random number so bot will randomly delay to select unselected box
-    setTimeout(()=>{
-        bot(runBot); //calling bot function
-    }, randomTimeDelay); //passing random delay value
 }
 
 // bot auto select function
@@ -221,7 +234,7 @@ function selectWinner(currentChecker,currentSign){
         setTimeout(()=>{ //after match won by someone then hide the playboard and show the result box after 700ms
             resultBox.classList.add("show");
             playBoard.classList.remove("show");
-        }, 700); //1s = 1000ms
+        }, 500); //1s = 1000ms
         wonText.innerHTML = `Player <p>${playerSign}</p> won the game!`; //displaying winning text with passing playerSign (X or O)
         printHistoryResult();
     }else{ //if all boxes/element have id value and still no one win then draw the match
@@ -232,7 +245,7 @@ function selectWinner(currentChecker,currentSign){
             setTimeout(()=>{ //after match drawn then hide the playboard and show the result box after 700ms
                 resultBox.classList.add("show");
                 playBoard.classList.remove("show");
-            }, 700); //1s = 1000ms
+            }, 500); //1s = 1000ms
             wonText.textContent = "Match has been drawn!"; //displaying draw match text
             printHistoryResult();
         }
@@ -301,12 +314,20 @@ function saveToDB(){
 
 function renderHistoryBoard(){
     let formattedData = '';
+    let listKey = [];
 
-    for (var i = 0; i < localStorage.length; i++) {
+    for(let i = 0; i < localStorage.length; i++){
+        listKey.push(localStorage.key(i));
+    }
+    console.log(listKey);
+    listKey.sort();
+    console.log(listKey);
+
+    for (let j = 0; j < localStorage.length; j++) {
         let tempHeadder;
         let tempData;
 
-        tempHeadder = localStorage.key(i);
+        tempHeadder = listKey[j];
         tempData = JSON.parse(localStorage.getItem(tempHeadder));
         
         formattedData += tempHeadder + "<br>"
@@ -351,6 +372,9 @@ function checkWinCondition(listMove,sign){
                         elms[k].style.backgroundColor = 'lawngreen';
                     }
                 }
+
+                // set flag game over
+                isOver = true;
 
                 break;
             }
