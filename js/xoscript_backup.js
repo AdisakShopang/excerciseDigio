@@ -6,6 +6,7 @@ selectBtnX = selectBox.querySelector(".options .playerX"),
 selectBtnO = selectBox.querySelector(".options .playerO"),
 playBoard = document.querySelector(".play-board"),
 players = document.querySelector(".players"),
+// allBox = document.querySelectorAll("section span"),
 resultBox = document.querySelector(".result-box"),
 wonText = resultBox.querySelector(".won-text"),
 replayBtn = resultBox.querySelector("button"),
@@ -19,10 +20,14 @@ var winCondition = [];
 var boardSize = 0;
 
 window.onload = ()=>{ //once window loaded
+    // for (let i = 0; i < allBox.length; i++) { //add onclick attribute in all available span
+    //    allBox[i].setAttribute("onclick", "clickedBox(this)");
+    // }
 
 }
 
 function renderPlayBoard(){
+    // alert(boardSize);
     // iterate board
     var count = 0; // To number cells
     var list = ''; // Use string to store appended values
@@ -101,6 +106,7 @@ selectBtnX.onclick = ()=>{
         selectBox.classList.add("hide"); //hide select box
         playBoard.classList.add("show"); //show the playboard section
     }
+
 }
 
 selectBtnO.onclick = ()=>{ 
@@ -114,6 +120,7 @@ selectBtnO.onclick = ()=>{
         playBoard.classList.add("show"); //show the playboard section
         players.setAttribute("class", "players active player"); //set class attribute in players with players active player values
     }
+    
 }
 
 let playerXIcon = "fas fa-times"; //class name of fontawesome cross icon
@@ -126,6 +133,8 @@ let botMove = [];
 
 // user click function
 function clickedBox(element){
+    // console.log(element);
+    
     if(players.classList.contains("player")){
         // collect history
         historyPlay.push("Player O -> " + element.getAttribute("coor"));
@@ -145,7 +154,7 @@ function clickedBox(element){
         element.setAttribute("id", playerSign); //set id attribute in span/box with player choosen sign
     }
     // console.log(historyPlay);
-    selectWinner('Player',playerSign); //caliing selectWinner function
+    selectWinner('Player'); //caliing selectWinner function
     element.style.pointerEvents = "none"; //once user select any box then that box can'be clicked again
     playBoard.style.pointerEvents = "none"; //add pointerEvents none to playboard so user can't immediately click on any other box until bot select
     let randomTimeDelay = ((Math.random() * 1000) + 200).toFixed(); //generating random number so bot will randomly delay to select unselected box
@@ -185,7 +194,7 @@ function bot(){
                 allBox[randomBox].setAttribute("id", playerSign); //set id attribute in span/box with player choosen sign
             }
             // console.log(historyPlay);
-            selectWinner('Bot',playerSign); //calling selectWinner function
+            selectWinner('Bot'); //calling selectWinner function
         }
         allBox[randomBox].style.pointerEvents = "none"; //once bot select any box then user can't click on that box
         playBoard.style.pointerEvents = "auto"; //add pointerEvents auto in playboard so user can again click on box
@@ -201,7 +210,7 @@ function checkIdSign(val1, val2, val3, sign){ //checking all id value is equal t
         return true;
     }
 }
-function selectWinner(currentChecker,currentSign){ 
+function selectWinner(currentChecker){ 
 
     var paramMove;
     if(currentChecker == 'Bot'){
@@ -211,10 +220,13 @@ function selectWinner(currentChecker,currentSign){
     }else{
         alert('selectWinner Error');
     }
-    // console.log(paramMove);
+    console.log(paramMove);
 
     //if the one of following winning combination match then select the winner
-    if(checkWinCondition(paramMove,currentSign)){
+    // if(checkIdSign(1,2,3,playerSign) || checkIdSign(4,5,6, playerSign) || checkIdSign(7,8,9, playerSign) || 
+    // checkIdSign(1,4,7, playerSign) || checkIdSign(2,5,8, playerSign) || checkIdSign(3,6,9, playerSign) || 
+    // checkIdSign(1,5,9, playerSign) || checkIdSign(3,5,7, playerSign)){
+    if(checkWinCondition(paramMove)){
         console.log("checkWinCondition : true" );
         runBot = false; //passing the false boolen value to runBot so bot won't run again
         bot(runBot); //calling bot function
@@ -224,8 +236,12 @@ function selectWinner(currentChecker,currentSign){
         }, 700); //1s = 1000ms
         wonText.innerHTML = `Player <p>${playerSign}</p> won the game!`; //displaying winning text with passing playerSign (X or O)
         printHistoryResult();
+        
     }else{ //if all boxes/element have id value and still no one win then draw the match
         console.log("checkWinCondition : false -> draw" );
+        // if(getIdVal(1) != "" && getIdVal(2) != "" && getIdVal(3) != "" 
+        // && getIdVal(4) != "" && getIdVal(5) != "" && getIdVal(6) != "" 
+        // && getIdVal(7) != "" && getIdVal(8) != "" && getIdVal(9) != ""){
         if(checkAllboxSelected()){
             runBot = false; //passing the false boolen value to runBot so bot won't run again
             bot(runBot); //calling bot function
@@ -245,12 +261,15 @@ replayBtn.onclick = ()=>{
 }
 
 function printHistoryResult(){
+    // let historyResult = document.querySelector(".history-result");
+    // console.log(historyResult);
     let formattedData = "<b>History Played</b>" + "<br>";
 
     historyPlay.forEach((data,index) => {
+        // console.log(index);
         formattedData += data + "<br>";
     });
-    // console.log(formattedData);
+    console.log(formattedData);
     historyResult.innerHTML = formattedData;
 
     // call fn save to db
@@ -259,6 +278,10 @@ function printHistoryResult(){
 }
 
 function saveToDB(){
+
+    // var name=document.getElementById("name").value;
+    // var address= document.getElementById("address").value;
+    // var age= document.getElementById("age").value;
 
     // $.ajax({
     //     type:"GET",
@@ -269,7 +292,7 @@ function saveToDB(){
     //         {
 
     //             var parsedata=JSON.parse(JSON.stringify(data));
-    //             var logindata=parsedata["historyPlay"];
+    //             var logindata=parsedata["Status"];
 
     //             if("sucess"==logindata)
     //             {   
@@ -293,29 +316,38 @@ function saveToDB(){
     
     // (C) RETRIEVE
     // Note: JSON decode
-    // loadedData = localStorage.getItem("History:"+dateTime);
-    // loadedData = JSON.parse(loadedData);
-    // console.log('new loadedData'+loadedData);
+    loadedData = localStorage.getItem("History:"+dateTime);
+    loadedData = JSON.parse(loadedData);
+    console.log('new loadedData'+loadedData);
 
 }
 
 function renderHistoryBoard(){
+    // let historyBoard = document.querySelector(".history-board");
+    // console.log(historyBoard);
+
+    // let formattedData = "<b>History Board</b>" + "<br>";
     let formattedData = '';
 
     for (var i = 0; i < localStorage.length; i++) {
+        
         let tempHeadder;
         let tempData;
 
         tempHeadder = localStorage.key(i);
+        console.log('key[' + i + '] : ' + tempHeadder);
         tempData = JSON.parse(localStorage.getItem(tempHeadder));
+        console.log('tempData[' + i + '] : ' + tempData);
         
         formattedData += tempHeadder + "<br>"
         tempData.forEach((data,index) => {
+            // console.log(index);
             formattedData += data + "<br>";
         });
         formattedData += "<br>";
+        
     }
-    // console.log(formattedData);
+    console.log(formattedData);
     
     // set data to div
     historyBoard.innerHTML = formattedData;
@@ -327,9 +359,12 @@ function clearHistoryBoard(){
     alert("History clear.")
 }
 
-function checkWinCondition(listMove,sign){
+function checkWinCondition(listMove){
     let resultBoolean = false;
-    let alreadyWin;
+
+    // console.log('listMove : ' + listMove);
+    // console.log('botMove : ' + botMove);
+    // console.log(JSON.stringify(winCondition));
     
     for(let i = 0 ; i < winCondition.length ; i++){
         var num = 0;
@@ -339,32 +374,19 @@ function checkWinCondition(listMove,sign){
                     num++;
                 }
             }
-            if(num >= boardSize){ // match all win condition
-                alreadyWin = winCondition[i].listWinCon;
+            if(num >= boardSize){
+                console.log('rtn true : ' + num);
                 resultBoolean = true;
-
-                // highlight win box
-                var elms = document.querySelectorAll("[id='" +sign + "']");
-                for(let k = 0 ; k < elms.length ; k++){
-                    if(alreadyWin.includes(elms[k].getAttribute("coor"))){
-                        console.log(elms[k].getAttribute("coor"));
-                        elms[k].style.backgroundColor = 'lawngreen';
-                    }
-                }
-
-                break;
             }
-            
         }
     }
-
-    // console.log('alreadyWin : ' + JSON.stringify(alreadyWin));
-    // console.log('listCoor : ' + JSON.stringify(listCoor));
 
     return resultBoolean;
 }
 
 function checkAllboxSelected(){
+    // console.log('boardSize : ' + boardSize);
+
     let checked = true;
     for(let index = 1 ; index <= boardSize*boardSize ; index++){
         

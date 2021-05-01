@@ -211,3 +211,45 @@ body{
   cursor: pointer;
   transition: all 0.3s ease;
 }
+
+.historyBtn{
+  display: flex;
+}
+.historyBtn button{
+  width: 70%;
+  font-size: 20px;
+  font-weight: 500;
+  padding: 10px 0;
+  border: none;
+  background: #56baed;
+  border-radius: 5px;
+  color: #fff;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 5% 0%;
+}
+.historyBtn button:hover{
+  transform: scale(0.96);
+}
+.historyBtn button.history-board-clear{
+  width: 30%;
+  font-size: 20px;
+  font-weight: 500;
+  padding: 10px 0;
+  border: none;
+  background: #ed5677;
+  border-radius: 5px;
+  color: #fff;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 5% 5%;
+  margin-right: 5px;
+}
+
+.history-board{
+  height: auto;
+  max-height: 300px;
+  overflow: auto;
+}
