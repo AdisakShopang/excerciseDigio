@@ -296,8 +296,14 @@ function saveToDB(){
     //     }); 
 
     var today = new Date();
-    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var year = today.getFullYear().toString();
+    var month = today.getMonth().toString().length == 1 ? '0' + today.getMonth().toString() : today.getMonth().toString();
+    var day = today.getDate().toString().length == 1 ? '0' + today.getDate().toString() : today.getDate().toString();
+    var date = year + '-' + month + '-' + day;
+    var hour = today.getHours().toString().length == 1 ? '0' + today.getHours().toString() : today.getHours().toString();
+    var minute = today.getMinutes().toString().length == 1 ? '0' + today.getMinutes().toString() : today.getMinutes().toString();
+    var second = today.getSeconds().toString().length == 1 ? '0' + today.getSeconds().toString() : today.getSeconds().toString();
+    var time = hour + ":" + minute + ":" + second;
     var dateTime = date + '/' + time;
 
     // (B) STORE IN LOCAL STORAGE
@@ -323,23 +329,28 @@ function renderHistoryBoard(){
     listKey.sort();
     console.log(listKey);
 
-    for (let j = 0; j < localStorage.length; j++) {
-        let tempHeadder;
-        let tempData;
-
-        tempHeadder = listKey[j];
-        tempData = JSON.parse(localStorage.getItem(tempHeadder));
-        
-        formattedData += tempHeadder + "<br>"
-        tempData.forEach((data,index) => {
-            formattedData += data + "<br>";
-        });
-        formattedData += "<br>";
-    }
-    // console.log(formattedData);
+    if(listKey.length > 0){
+        for (let j = 0; j < localStorage.length; j++) {
+            let tempHeadder;
+            let tempData;
     
-    // set data to div
-    historyBoard.innerHTML = formattedData;
+            tempHeadder = listKey[j];
+            tempData = JSON.parse(localStorage.getItem(tempHeadder));
+            
+            formattedData += tempHeadder + "<br>"
+            tempData.forEach((data,index) => {
+                formattedData += data + "<br>";
+            });
+            formattedData += "<br>";
+        }
+        // console.log(formattedData);
+        
+        // set data to div
+        historyBoard.innerHTML = formattedData;
+    }else{
+        alert('No history record.');
+    }
+    
 }
 
 function clearHistoryBoard(){
